@@ -1,0 +1,17 @@
+pylocalvqe includes a modified build of LocalVQE.
+
+LocalVQE: Copyright 2024-2026 Richard Sherwood Palethorpe.
+Source: https://github.com/localai-org/LocalVQE
+Revision: 35b116d5eb059d552fa46fac3ce2963ed13ce153
+
+pylocalvqe modified the upstream build to link LocalVQE and ggml statically
+inside a shared core, limit exported symbols, disable dynamic ggml backend
+file loading, and expose the upstream SHA-256 implementation internally.
+The upstream fused-GRU patch is applied to the pinned ggml source.
+The ordered patches and complete source manifest are in cpp/cmake/ and
+scripts/cmake/. pylocalvqe's own core and Python interface wrap this build.
+
+ggml revision: c044a8eeae2591faa0950c8b5e514cbc4bbfc4ca
+nanobind version: 3.1.0 (including robin-map and DLPack-derived interfaces).
+DLPack terms are copied from https://github.com/dmlc/dlpack/blob/v1.1/LICENSE.
+The individual license files retain the corresponding third-party terms.

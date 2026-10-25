@@ -1,0 +1,16 @@
+NVIDIA CUDA components
+
+The wheel includes CPU and CUDA 13 backends and code compiled with the
+NVIDIA CUDA Toolkit. NVIDIA CUDA components are governed by the NVIDIA
+CUDA End User License Agreement and are not covered by pylocalvqe's MIT
+license or the other third-party licenses in this directory.
+
+https://docs.nvidia.com/cuda/eula/index.html
+
+The core dynamically links the CUDA 13 runtime and cuBLAS libraries, which
+are supplied by the nvidia-cuda-runtime and nvidia-cublas pip dependencies.
+Those user-space libraries are not included in this wheel. A compatible
+NVIDIA driver and GPU are required only for CUDA processing; the wheel can
+be imported and used for CPU processing without them. NVIDIA driver
+libraries are not included in this wheel.
+This notice identifies the applicable terms; it does not reproduce the EULA.

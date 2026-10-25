@@ -166,8 +166,23 @@ shared library. The wrapper owns engine resources and reports failures as
 
 ## License
 
-pylocalvqe's own code is licensed under MIT. Wheels include the full license
-texts and copyright notices for bundled third-party components, along with
-a notice identifying NVIDIA CUDA terms for the CUDA code. The wheel's
-license metadata is `MIT AND Apache-2.0 AND BSD-3-Clause`. CUDA runtime
-libraries and the NVIDIA driver have their own terms.
+pylocalvqe's own code is licensed under MIT
+([`LICENSE`](https://github.com/sync-dev-org/pylocalvqe/blob/main/LICENSE)).
+The wheel also bundles the third-party components below, so the wheel's
+license metadata is `MIT AND Apache-2.0 AND BSD-3-Clause`. The wheel carries
+the full license texts and copyright notices, and the same files are in
+[`licenses/`](https://github.com/sync-dev-org/pylocalvqe/tree/main/licenses).
+
+| Component | License | Files |
+|---|---|---|
+| LocalVQE | Apache-2.0 | `licenses/localvqe.txt`, `licenses/localvqe-notice.txt` |
+| ggml | MIT | `licenses/ggml.txt` |
+| llamafile code in ggml | MIT | `licenses/llamafile.txt` |
+| YaRN code in ggml | MIT | `licenses/yarn.txt` |
+| nanobind | BSD-3-Clause | `licenses/nanobind.txt` |
+| robin-map (used by nanobind) | MIT | `licenses/robin-map.txt` |
+| DLPack (used by nanobind) | Apache-2.0 | `licenses/dlpack.txt` |
+| Code compiled with the NVIDIA CUDA Toolkit | NVIDIA CUDA EULA | `licenses/cuda-runtime.txt` |
+
+The CUDA runtime libraries that pip installs and the NVIDIA driver have their
+own terms.

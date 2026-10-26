@@ -29,15 +29,16 @@ CPython's stable ABI and the `manylinux_2_28_x86_64` platform tag, for example
 The host needs glibc 2.28 or later and a CPU with SSE4.2, AVX, AVX2, FMA,
 F16C and BMI2. AVX-512 is unnecessary. NumPy 1.26 or later and the CUDA
 user-space libraries are installed automatically as Python dependencies,
-including when only CPU processing is used. The pinned CUDA distributions
-are `nvidia-cuda-runtime==13.3.29` and `nvidia-cublas==13.6.0.2`; cuBLAS also
-brings its NVRTC dependency. No compiler, CMake, CUDA toolkit or OpenMP
+including when only CPU processing is used. The CUDA distributions
+are `nvidia-cuda-runtime>=13.2.51,<14` and `nvidia-cublas>=13.3.0.5,<14`.
+NVRTC is installed transitively when required by the selected cuBLAS release.
+No compiler, CMake, CUDA toolkit or OpenMP
 runtime is required to install or use the package.
 
 Import and `device="cpu"` processing work without an NVIDIA driver or GPU.
 To use `device="cuda"`, provide a supported NVIDIA GPU and a compatible host
-driver. The supported Linux driver floor is 610.43.02 for CUDA 13.3; see the
-[NVIDIA release notes](https://docs.nvidia.com/cuda/archive/13.3.1/cuda-toolkit-release-notes/index.html)
+driver. The supported Linux driver floor is 595.45.04 for CUDA 13.2; see the
+[NVIDIA release notes](https://docs.nvidia.com/cuda/archive/13.2.0/cuda-toolkit-release-notes/index.html)
 and the selected pylocalvqe release's validated driver information. WSL2
 uses the compatible NVIDIA driver installed on Windows. The wheel contains
 cubins for `sm_86`, `sm_89` and `sm_120a`, without PTX. CUDA user-space and

@@ -2,13 +2,12 @@
 
 C++ and Python interfaces for [LocalVQE](https://github.com/localai-org/LocalVQE),
 a ggml-based voice quality enhancement engine providing acoustic echo
-cancellation, noise suppression and dereverberation.
+cancellation, noise suppression and dereverberation. Processing is **CPU Only**.
 
 - Stream 16 kHz mono audio in 256-sample (16 ms) hops.
 - Use v1.3, v1.4-AEC 200K or v1.4-AEC 2.7K models.
 - Read each model's algorithmic delay for downstream compensation.
 - Use the same shared core from Python or C++20 through a flat C ABI.
-- Select CPU or CUDA at runtime with one installed package.
 - Download model weights separately and verify their SHA-256 digests.
 
 ## Install
@@ -21,35 +20,21 @@ python3 -m venv .venv
 .venv/bin/python -m pip install --only-binary=:all: pylocalvqe
 ```
 
-Pin a release when reproducibility matters, for example `pylocalvqe==0.4.0`.
-One Linux x86_64 wheel contains both CPU and CUDA 13 backends. It uses
+Pin a release when reproducibility matters, for example `pylocalvqe==0.5.0`.
+One Linux x86_64 wheel contains the CPU backend. It uses
 CPython's stable ABI and the `manylinux_2_28_x86_64` platform tag, for example
-`pylocalvqe-0.4.0-cp312-abi3-manylinux_2_28_x86_64.whl`.
+`pylocalvqe-0.5.0-cp312-abi3-manylinux_2_28_x86_64.whl`.
 
 The host needs glibc 2.28 or later and a CPU with SSE4.2, AVX, AVX2, FMA,
-F16C and BMI2. AVX-512 is unnecessary. NumPy 1.26 or later and the CUDA
-user-space libraries are installed automatically as Python dependencies,
-including when only CPU processing is used. The CUDA distributions
-are `nvidia-cuda-runtime>=13.2.51,<14` and `nvidia-cublas>=13.3.0.5,<14`.
-NVRTC is installed transitively when required by the selected cuBLAS release.
-No compiler, CMake, CUDA toolkit or OpenMP
-runtime is required to install or use the package.
-
-Import and `device="cpu"` processing work without an NVIDIA driver or GPU.
-To use `device="cuda"`, provide a supported NVIDIA GPU and a compatible host
-driver. The supported Linux driver floor is 595.45.04 for CUDA 13.2; see the
-[NVIDIA release notes](https://docs.nvidia.com/cuda/archive/13.2.0/cuda-toolkit-release-notes/index.html)
-and the selected pylocalvqe release's validated driver information. WSL2
-uses the compatible NVIDIA driver installed on Windows. The wheel contains
-cubins for `sm_86`, `sm_89` and `sm_120a`, without PTX. CUDA user-space and
-NVIDIA driver libraries are not bundled inside the pylocalvqe wheel;
-user-space libraries come from the pip dependencies.
+F16C and BMI2. AVX-512 is unnecessary. NumPy 1.26 or later is installed
+automatically as a Python dependency. No compiler, CMake or OpenMP runtime
+is required to install or use the package.
 
 [GitHub Releases](https://github.com/sync-dev-org/pylocalvqe/releases) contain
 the same wheel bytes as PyPI and `SHA256SUMS`. To verify a pinned download:
 
 ```bash
-tag=v0.4.0
+tag=v0.5.0
 mkdir -p pylocalvqe-release
 gh release download "$tag" --repo sync-dev-org/pylocalvqe \
   --pattern '*.whl' --pattern SHA256SUMS --dir pylocalvqe-release
@@ -85,7 +70,7 @@ from pylocalvqe import LocalVQE
 from pylocalvqe.assets import download_model
 
 model = download_model("v1.4-aec-200k", "models")
-with LocalVQE(model, device="cpu", threads=1) as engine:
+with LocalVQE(model, threads=1) as engine:
     mic = np.zeros(engine.hop_length, dtype=np.float32)
     ref = np.zeros(engine.hop_length, dtype=np.float32)
     enhanced = engine.process(mic, ref)
@@ -103,15 +88,15 @@ and v1.4-AEC 200K, and zero for v1.4-AEC 2.7K. Thread counts range from 0 to
 32, with 0 selecting the native default. `close()` releases resources and is
 safe to call repeatedly; the context manager closes automatically.
 
-Use `device="cuda"` to select CUDA. Without a compatible NVIDIA driver or
-GPU, this request raises `LocalVQEError`; the same package can still process
-on CPU. The v1.4-AEC 2.7K model stores context
-and weights on the selected CUDA device but computes frames on the CPU;
-v1.3 and v1.4-AEC 200K run their frame graphs on CUDA when selected.
-
 When migrating from v0.3, remove the `library_path` argument from `LocalVQE`:
 the wheel supplies its own shared core. No separate native library download
 or path argument is needed.
+
+When migrating from v0.4, remove the `device` argument from `LocalVQE`.
+Processing is CPU Only; CUDA can no longer be selected. The C ABI's
+`pylocalvqe_engine_config` also removes its `device` field, and the core's
+SONAME changes to `libpylocalvqe.so.2`. Rebuild C++ applications against the
+updated headers and core.
 
 ## C++ usage
 
@@ -183,7 +168,3 @@ the full license texts and copyright notices, and the same files are in
 | nanobind | BSD-3-Clause | `licenses/nanobind.txt` |
 | robin-map (used by nanobind) | MIT | `licenses/robin-map.txt` |
 | DLPack (used by nanobind) | Apache-2.0 | `licenses/dlpack.txt` |
-| Code compiled with the NVIDIA CUDA Toolkit | NVIDIA CUDA EULA | `licenses/cuda-runtime.txt` |
-
-The CUDA runtime libraries that pip installs and the NVIDIA driver have their
-own terms.

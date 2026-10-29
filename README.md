@@ -21,17 +21,25 @@ python3 -m venv .venv
 ```
 
 Pin a release when reproducibility matters, for example `pylocalvqe==0.5.0`.
-One Linux x86_64 wheel contains the CPU backend. It uses
-CPython's stable ABI and the `manylinux_2_28_x86_64` platform tag, for example
-`pylocalvqe-0.5.0-cp312-abi3-manylinux_2_28_x86_64.whl`.
+Linux x86_64 and Windows x86_64 wheels are available on PyPI. Both contain
+only the CPU backend and use CPython's stable ABI, with the tags
+`cp312-abi3-manylinux_2_28_x86_64` and `cp312-abi3-win_amd64`, respectively.
+On Windows, install from PowerShell:
 
-The host needs glibc 2.28 or later and a CPU with SSE4.2, AVX, AVX2, FMA,
+```powershell
+py -3.12 -m venv .venv
+.venv\Scripts\python.exe -m pip install --only-binary=:all: pylocalvqe
+```
+
+Linux needs glibc 2.28 or later. Windows needs the UCRT supplied by Windows;
+a separate Visual C++ Redistributable package is unnecessary. Both platforms
+need a CPU with SSE4.2, AVX, AVX2, FMA,
 F16C and BMI2. AVX-512 is unnecessary. NumPy 1.26 or later is installed
 automatically as a Python dependency. No compiler, CMake or OpenMP runtime
 is required to install or use the package.
 
 [GitHub Releases](https://github.com/sync-dev-org/pylocalvqe/releases) contain
-the same wheel bytes as PyPI and `SHA256SUMS`. To verify a pinned download:
+the same two wheels as PyPI and `SHA256SUMS`. To verify a pinned download:
 
 ```bash
 tag=v0.5.0

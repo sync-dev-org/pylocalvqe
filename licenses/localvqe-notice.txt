@@ -6,10 +6,11 @@ Revision: 35b116d5eb059d552fa46fac3ce2963ed13ce153
 
 pylocalvqe modified the upstream build to link LocalVQE and ggml statically
 inside a shared core, limit exported symbols, disable dynamic ggml backend
-file loading, and expose the upstream SHA-256 implementation internally.
+file loading, and adapt the upstream SHA-256 implementation for private model
+verification in cpp/src/model_hash.cpp.
 The upstream fused-GRU patch is applied to the pinned ggml source.
-The ordered patches and complete source manifest are in cpp/cmake/ and
-scripts/cmake/. pylocalvqe's own core and Python interface wrap this build.
+The ordered patches and complete source manifests are included in the locked
+Conan recipes. pylocalvqe's own core and Python interface wrap this build.
 
 ggml revision: c044a8eeae2591faa0950c8b5e514cbc4bbfc4ca
 nanobind version: 3.1.0 (including robin-map and DLPack-derived interfaces).
